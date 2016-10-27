@@ -1,9 +1,9 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: Startegy Service
+  title: trader m5 Service
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost:10030
 # basePath prefixes all resource paths 
 basePath: /
 # 
@@ -17,79 +17,35 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
-
+  
 securityDefinitions:
   api_key:
     type: apiKey
     in: header
     name: api-key
+    
 paths:
-  /strategies:
-    x-swagger-router-controller: strategy.controller
-    get:
+  /trader/create:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: trader.controller
+    post:
       security:
         - api_key: []
-      description: Returns a list of available strategies
-      produces:
-        - application/json
-      operationId: get
-      parameters: 
-        - name: _id
-          in: query
-          description: The id of a specific strategy
-          required: false
-          type: string
-      responses:
-        "200":
-          description: A list of strategies
-          schema: 
-            type: array
-            items:
-              $ref: "#/definitions/Strategy"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    post:
-      description: adds a new strategy
-      produces:
-        - application/json
-      operationId: post
+      description: adds a new trader-m5 for a user using the strategy passed
+      operationId: create
       parameters:
-        - name: strategy
-          description: the complete strategy object
+        - name: payload
+          description: the required input for the event to create
           in: body
           required: true
           schema:
-            $ref: "#/definitions/Strategy"
-      responses:
-        200:
-          description: OK - created successfully
-          schema: 
-            $ref: "#/definitions/Strategy"
-    
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    get:
-      security:
-        - api_key: []
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
+            $ref: "#/definitions/TraderEventPayload"
       responses:
         "200":
           description: Success
           schema:
             # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
+            $ref: "#/definitions/EventResponse"
         default:
           description: Error
           schema:
@@ -98,48 +54,34 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  Strategy:
+  TraderEventPayload:
     type: object
     required:
-      - id
-      - name
-      - description
-      - createdTime
-      - isActive
-      - granularity
-      - postedBy
+      - userId
+      - strategyId
+      - instrument
     properties:
-      id:
+      strategyId:
         type: string
-      name:
+        description: the trader's strategy
+        default: 5788751b5ff4760ceb704ec1
+      userId:
         type: string
-      description:
-        type: string
-      createdTime:
-        type: string
-        format: date-time
-      isActive:
-        type: boolean
-      granularity:
+        description: the owner of the trader
+        default: 57b16c90b285f00a0c301318
+      instrument:
         type: string
         enum:
-          - M5
-          - M15
-          - M30
-          - H1
-          - H4
-          - D1
-      postedBy:
-        type: string
-  HelloWorldResponse:
+          - AUD_USD
+  EventResponse:
     required:
       - message
     properties:
       message:
         type: string
   ErrorResponse:
+    required:
+      - message
     properties:
       message:
         type: string
-    required:
-      - message
