@@ -13,6 +13,7 @@ export class M5TopicConsumerService {
                 { topic: api.Config.settings.topic_m5, partition: 0 },
             ], {
                 autoCommit: true,
+                groupId: api.Config.settings.client_id,
             }
         );
 
@@ -23,7 +24,7 @@ export class M5TopicConsumerService {
                 let event = JSON.parse(message.value);
                 if (event.event) {
                     let queryService = new api.TraderQueryService();
-                    await queryService.updateQuery(event);
+                    await queryService.update(event);
                 }
             }
         });

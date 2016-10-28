@@ -25,9 +25,37 @@ securityDefinitions:
     name: api-key
     
 paths:
-  /trader/create:
+  /traders:
     # binds a127 app logic to a route
     x-swagger-router-controller: trader.controller
+    get:
+      security:
+        - api_key: []
+      description: gets all trader-m5 for a user
+      operationId: get
+      parameters:
+        - name: userId
+          description: the owner of the traders
+          in: query
+          required: true
+          type: string
+          default: 57b16c90b285f00a0c301318
+        - name: _id
+          description: the optional trader id
+          in: query
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/TraderQuery"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     post:
       security:
         - api_key: []
@@ -73,6 +101,40 @@ definitions:
         type: string
         enum:
           - AUD_USD
+  TraderQuery:
+    type: object
+    properties:
+      created: 
+        type: string
+        format: date-time
+        description: the date time the trader created
+      updated: 
+        type: string
+        format: date-time
+        description: last time the trader updated 
+      status: 
+        type: string
+        enum:
+          - Created
+          - In
+          - Out
+        description: the last status of the trader
+      version: 
+        type: number
+        description: the version number of the trader
+      instrument: 
+        type: string
+        enum:
+          - AUD_USD
+        description: the instrument that the trader is using
+      id: 
+        type: 
+          - string
+          - number
+        description: the id of the trader
+      userId: 
+        type: string
+        description: the owner of the trader
   EventResponse:
     required:
       - message
