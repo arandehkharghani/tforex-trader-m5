@@ -21,10 +21,10 @@ export class M5TopicConsumerService {
         // is not reset with this client id.
         M5TopicConsumerService._consumer.on('message', async (message: any) => {
             if (message && message.value) {
-                let event = JSON.parse(message.value);
-                if (event.event) {
+                let item = JSON.parse(message.value);
+                if (item.event) {
                     let queryService = new api.TraderQueryService();
-                    await queryService.update(event);
+                    await queryService.update(item);
                 }
             }
         });

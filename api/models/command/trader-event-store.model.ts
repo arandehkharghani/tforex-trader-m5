@@ -8,7 +8,10 @@ let mongoose = api.DataAccess.mongooseInstance;
 export interface TraderEventStore {
     traderId: api.Trader;
     isDispatched: boolean;
-    event: api.TraderEvent;
+    raised: Date;
+    version: number;
+    event: string;
+    payload: api.TraderCreatedPayload;
 }
 
 export interface TraderEventStoreModel extends api.TraderEventStore, Document {
@@ -18,7 +21,10 @@ export interface TraderEventStoreModel extends api.TraderEventStore, Document {
 let schema = new Schema({
     traderId: { type: Schema.Types.ObjectId, ref: 'Trader' },
     isDispatched: { type: Boolean, default: false },
-    event: { type: Schema.Types.Mixed },
+    raised: Date,
+    version: Number,
+    event: { type: String, enum: ['trader_created'] },
+    payload: { type: Schema.Types.Mixed },
 });
 
 schema.statics.findUndispatchedEvents = async () => {

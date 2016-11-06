@@ -16,7 +16,7 @@ export * from './enums/event.enum';
 export * from './enums/instrument.enum';
 export * from './enums/query/trader-status.enum';
 
-export * from './interfaces/trader-event.interface';
+export * from './interfaces/event-payload.interface';
 
 export * from './services/command/trader-command.service';
 export * from './services/query/trader-query.service';

@@ -24,12 +24,10 @@ export class TraderCommandService {
         let traderEventStore: api.TraderEventStore = {
             isDispatched: false,
             traderId: traderModel._id,
-            event: {
-                event: api.EventEnum.trader_created,
-                raised: new Date(),
-                version: 0,
-                payload: payload,
-            },
+            event: api.EventEnum[api.EventEnum.trader_created],
+            raised: new Date(),
+            version: 0,
+            payload: payload,
         };
 
         let traderEventStoreModel = new api.traderEventStoreModel(traderEventStore);

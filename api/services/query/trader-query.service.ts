@@ -8,9 +8,9 @@ export class TraderQueryService {
         return data;
     }
 
-    public async update(event: api.TraderEvent) {
+    public async update(event: api.TraderEventStore) {
         switch (event.event) {
-            case api.EventEnum.trader_created:
+            case api.EventEnum[api.EventEnum.trader_created]:
                 let model = new api.traderQueryModel({
                     _id: new Types.ObjectId(event.payload.traderId),
                     userId: new Types.ObjectId(event.payload.userId),

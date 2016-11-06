@@ -19,9 +19,9 @@ export class TraderEventDispatcherService {
         let keyedMessages: kafka.KeyedMessage[] = [];
 
         for (let item of unpatched) {
-            switch (item.event.event) {
-                case api.EventEnum.trader_created:
-                    keyedMessages.push(new kafka.KeyedMessage(item.traderId.toString(), JSON.stringify(item.event)));
+            switch (item.event) {
+                case api.EventEnum[api.EventEnum.trader_created]:
+                    keyedMessages.push(new kafka.KeyedMessage(item.traderId.toString(), JSON.stringify(item)));
                     break;
             }
         }
